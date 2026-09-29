@@ -14,15 +14,16 @@ DeskHalo connects a Windows host to a native OpenXR Quest app over USB or local 
 - 720p, 1080p, 1440p, 4K and 8K resolution requests, negotiated to headset capabilities.
 - 15–120 FPS stream targets, separate headset refresh control, hardware H.264 encoding when available.
 - USB through ADB reverse, Windows hotspot, or a shared local router.
-- Hideable 100%, 80% and 60% keyboard layouts with live key highlights, compact clock and a 5° tilt. Size and place the keyboard by framing it with your fingers.
-- Passthrough, articulated hands, Touch controller models and button feedback. Import custom OBJ, GLB or FBX skins.
+- Hideable 100%, 80% and 60% keyboard layouts with live key highlights, compact clock and a 5° tilt. Automatically size and place the visible keyboard by holding a two-hand framing gesture for 1.2 seconds.
+- Passthrough, translucent amber hands and Touch controllers, with button feedback visible through the controller shell. Import custom OBJ, GLB or FBX skins.
+- Windows opens maximized and keeps sharing in the system tray when its window is closed. Right-click the tray icon to open or quit.
 - Saved workspace profiles, file transfer, PC audio to Quest and Quest microphone playback on the PC.
 - Optional independent Windows extended desktops through the separately installed Virtual Display Driver.
 
 ## Install and connect
 
 1. Download the **Windows x64 MSI** and **Quest APK** from Releases. The MSI installs for your Windows user and adds a Start menu shortcut. This preview MSI is unsigned; the APK uses a development signing certificate.
-2. Sideload the APK onto a Quest with developer mode and USB debugging enabled: `adb install -r DeskHalo-Quest-v0.6.0-preview.apk`.
+2. Sideload the APK onto a Quest with developer mode and USB debugging enabled: `adb install -r DeskHalo-Quest-v0.6.1-preview.apk`.
 3. Open **DeskHalo Host** and click **Start sharing**.
 4. For USB, run `adb reverse tcp:47654 tcp:47654` and use `127.0.0.1` in Quest. For Wi-Fi, use the PC's local address shown by the host. Enter the six-digit pairing code.
 5. Press the **left controller ≡ button** to show or hide settings. The right Meta/Oculus button belongs to the headset system.

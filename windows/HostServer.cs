@@ -37,7 +37,7 @@ public sealed class HostServer : IAsyncDisposable
             await next(context);
         });
         FileTransfer.Map(pending);AudioStream.Map(pending);
-        pending.MapGet("/hello", () => Results.Json(new { app = "DeskHalo", version = "0.6.0", codec = "h264", displays = Capture.Displays() }));
+        pending.MapGet("/hello", () => Results.Json(new { app = "DeskHalo", version = "0.6.1", codec = "h264", displays = Capture.Displays() }));
         pending.MapGet("/connection-tests", () => Results.Json(ConnectionTests.Request()));
         pending.MapGet("/probe", () => Results.Bytes(new byte[131072], "application/octet-stream"));
         pending.MapPost("/connection-tests", async (HttpContext context) => { if(context.Request.ContentLength is null or > 8192) return Results.BadRequest(); var report=await System.Text.Json.JsonDocument.ParseAsync(context.Request.Body,cancellationToken:context.RequestAborted);using(report){ConnectionTests.Report(report.RootElement.GetProperty("generation").GetInt64(),report.RootElement.GetProperty("text").GetString() ?? "");}return Results.Ok(); });
@@ -55,7 +55,7 @@ public sealed class HostServer : IAsyncDisposable
             try {
                 byte[] bytes = Capture.Frame(id, width, height); context.Response.ContentType = "image/jpeg";
                 await context.Response.Body.WriteAsync(bytes, context.RequestAborted);
-                Interlocked.Increment(ref framesSent); LastStatus = $"Display {id + 1} • {width} × {height}";
+                Interlocked.Increment(ref framesSent); LastStatus = $"Display {id + 1} ï¿½ {width} ï¿½ {height}";
             } catch (ArgumentOutOfRangeException) { context.Response.StatusCode = 404; }
               catch (System.ComponentModel.Win32Exception ex) { LastStatus = "Capture unavailable: " + ex.Message; context.Response.StatusCode = 503; await context.Response.WriteAsync(LastStatus); }
             finally { captureLock.Release(); }

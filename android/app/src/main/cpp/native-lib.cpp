@@ -186,7 +186,7 @@ void main(){color=texture(video,(transform*vec4(uv,0,1)).xy);if(srgbTarget){vec3
     if(keyboardY!=previousKeyboardY||keyboardZ!=previousKeyboardZ){keyboardAnchored=false;previousKeyboardY=keyboardY;previousKeyboardZ=keyboardZ;}
 
     if(resetKeyboardPose.exchange(false))keyboardAnchored=false;
-    if(measuringKeyboard){
+    if(keyboardVisible||measuringKeyboard){
      float points[24];jfloatArray input=nullptr;
      if(tracked.framePoints(points)){input=env->NewFloatArray(24);env->SetFloatArrayRegion(input,0,24,points);}
      jfloatArray result=(jfloatArray)env->CallObjectMethod(activity,env->GetMethodID(javaClass,"onKeyboardFrame","([F)[F"),input);

@@ -46,6 +46,10 @@ public static class VideoStream
                 Add("-hide_banner", "-loglevel", "warning", "-nostdin", "-fflags", "nobuffer", "-analyzeduration", "0", "-probesize", "32");
                 if(attempt.dda) Add("-f","lavfi","-i",$"ddagrab=output_idx=0:framerate={fps}:draw_mouse={(separateCursor?0:1)}:output_fmt=bgra","-an");
                 else Add("-f", "gdigrab", "-framerate", fps.ToString(), "-draw_mouse", separateCursor ? "0" : "1", "-offset_x", d.X.ToString(), "-offset_y", d.Y.ToString(), "-video_size", $"{d.Width}x{d.Height}", "-i", "desktop", "-an");
+                // GDI timestamps use microseconds. With probing disabled, FFmpeg can infer
+                // a million-FPS output and duplicate a captured frame indefinitely.
+                // Explicit encoder timing preserves the requested rate without a catch-up queue.
+                Add("-r",fps.ToString(),"-fps_mode","cfr","-enc_time_base",$"1:{fps}");
                 Add("-vf", (attempt.dda ? "hwdownload,format=bgra," : "") + $"scale={width}:{height}:force_original_aspect_ratio=decrease:flags=fast_bilinear:in_range=pc:out_color_matrix=bt709:out_range=tv,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,format=yuv420p", "-c:v", encoder, "-b:v", bitrate + "k", "-maxrate", bitrate + "k", "-bufsize", (gaming ? Math.Max(100,bitrate/10) : bitrate/4) + "k", "-g", fps.ToString(), "-bf", "0");
                 if (encoder == "h264_qsv") Add("-async_depth", "1", "-look_ahead", "0", "-preset", "veryfast");
                 if (encoder == "h264_nvenc") Add("-preset", "p1", "-tune", "ull", "-zerolatency", "1");

@@ -8,6 +8,10 @@ public sealed partial class MainWindow : Window
     private readonly HostServer server = new();
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     private int virtualCount;
+    private readonly TrayIcon tray;
+    private bool quitting;
+    private void ShowHost(){AppWindow.Show();(AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter)?.Maximize();Activate();}
+    private async void QuitHost(){if(quitting)return;quitting=true;timer.Stop();tray.Dispose();await server.DisposeAsync();Close();}
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     private static extern uint GetDpiForWindow(IntPtr window);
     public MainWindow()
@@ -18,10 +22,13 @@ public sealed partial class MainWindow : Window
         uint dpi=GetDpiForWindow(WinRT.Interop.WindowNative.GetWindowHandle(this));
         double scale=Math.Max(1,dpi/96.0);
         AppWindow.Resize(new Windows.Graphics.SizeInt32(Math.Min(area.Width,(int)(1180*scale)),Math.Min(area.Height,(int)(980*scale))));
+        (AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter)?.Maximize();
+        tray=new TrayIcon(WinRT.Interop.WindowNative.GetWindowHandle(this),ShowHost,QuitHost);
+        AppWindow.Closing+=(_,e)=>{if(!quitting&&tray.Available){e.Cancel=true;AppWindow.Hide();}else if(!quitting){e.Cancel=true;QuitHost();}};
         CodeText.Text = server.PairingCode;
         AddressText.Text = "USB: 127.0.0.1:47654\n" + string.Join("\n", HostServer.LocalAddresses().Select(x => "Wi-Fi: " + x + ":47654"));
         timer.Tick += (_, _) => Refresh(); timer.Start();
-        Closed += async (_, _) => { timer.Stop(); await server.DisposeAsync(); };
+        Closed += (_, _) => { timer.Stop(); tray.Dispose(); };
         _ = CheckDriver();
         string[] args = Environment.GetCommandLineArgs();
         int testArg = Array.IndexOf(args, "--test-session");

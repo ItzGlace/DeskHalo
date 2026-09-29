@@ -31,6 +31,6 @@
    </StackPanel>
   </Grid>
   </ScrollViewer>
-  <TextBlock Grid.Row="2" Text="LOCAL CONNECTION  /  H.264 0.6.0  /  USB + WI-FI" Foreground="#767B85" FontSize="12"/>
+  <TextBlock Grid.Row="2" Text="LOCAL CONNECTION  /  H.264 0.6.1  /  USB + WI-FI" Foreground="#767B85" FontSize="12"/>
  </Grid>
 </Window>

@@ -11,7 +11,7 @@ struct TrackedVisuals {
  GLuint program=0,vbo=0,vao=0,fbo=0,depthBuffer=0;
  struct Buttons{float trigger=0,squeeze=0,stickX=0,stickY=0;bool first=false,second=false,stick=false,menu=false;};Buttons buttons[2];
  std::shared_ptr<SkinModel> models[4];
- struct Batch{size_t first,count;GLuint texture;};std::vector<Batch> batches;
+ struct Batch{size_t first,count;GLuint texture;bool control;};std::vector<Batch> batches;
  struct Vertex{float x,y,z,r,g,b,a,u=0,v=0;};std::vector<Vertex> vertices;
  void init(XrInstance instance,XrSession session,bool hands,bool aimAvailable,int64_t format){
   hasAim=aimAvailable;
@@ -51,7 +51,7 @@ precision mediump float;in vec4 color;in vec2 uv;uniform sampler2D tex;uniform b
 
     if(known[h]){
      float opacity=tracked?1.f-.9f*std::clamp((milliseconds()-moved[h]-10000)/1000.f,0.f,1.f):.1f;
-     XrPosef visual=last[h];visual.orientation=multiply(visual.orientation,{-0.70710678f,0,0,0.70710678f});
+     XrPosef visual=last[h];visual.orientation=multiply(visual.orientation,{-0.38268343f,0,0,0.92387953f});
      auto world=[&](XrVector3f p){auto v=rotate(visual.orientation,p);return XrVector3f{v.x+last[h].position.x,v.y+last[h].position.y,v.z+last[h].position.z};};
      if(models[h+2])custom(h+2,h,visual,opacity);
      else{
@@ -107,7 +107,7 @@ precision mediump float;in vec4 color;in vec2 uv;uniform sampler2D tex;uniform b
    }
    GLuint texture=0;
    if(mesh.texture>=0){auto& t=model->textures[mesh.texture];if(!t.gpu){glGenTextures(1,&t.gpu);glBindTexture(GL_TEXTURE_2D,t.gpu);glTexImage2D(GL_TEXTURE_2D,0,GL_SRGB8_ALPHA8,t.width,t.height,0,GL_RGBA,GL_UNSIGNED_BYTE,t.rgba.data());glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);}texture=t.gpu;}
-   batches.push_back({start,vertices.size()-start,texture});
+   batches.push_back({start,vertices.size()-start,texture,slot>=2&&mesh.control>=0});
   }
  }
  void draw(const std::array<XrView,2>& views,std::array<XrCompositionLayerProjectionView,2>& output){
@@ -119,6 +119,10 @@ precision mediump float;in vec4 color;in vec2 uv;uniform sampler2D tex;uniform b
    glActiveTexture(GL_TEXTURE0);glUniform1i(glGetUniformLocation(program,"tex"),0);size_t first=0;
    auto drawRange=[&](size_t at,size_t count,GLuint tex){if(!count)return;glUniform1i(glGetUniformLocation(program,"textured"),tex!=0);glBindTexture(GL_TEXTURE_2D,tex);glDrawArrays(GL_TRIANGLES,at,count);};
    for(auto& batch:batches){drawRange(first,batch.first-first,0);drawRange(batch.first,batch.count,batch.texture);first=batch.first+batch.count;}drawRange(first,vertices.size()-first,0);
+   // Reveal controls hidden behind the translucent shell/ring, without doubling visible surfaces.
+   glEnable(GL_BLEND);glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);glDepthMask(GL_FALSE);glDepthFunc(GL_GREATER);
+   for(auto& batch:batches)if(batch.control)drawRange(batch.first,batch.count,batch.texture);
+   glDisable(GL_BLEND);glDepthMask(GL_TRUE);glDepthFunc(GL_LESS);
    output[eye]={XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW};output[eye].pose=views[eye].pose;output[eye].fov=f;output[eye].subImage.swapchain=chain;output[eye].subImage.imageRect={{eye*1024,0},{1024,1024}};}
   glDisable(GL_DEPTH_TEST);glBindFramebuffer(GL_FRAMEBUFFER,0);glFlush();XrSwapchainImageReleaseInfo r{XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO};check(xrReleaseSwapchainImage(chain,&r),"Release hand visuals");
  }

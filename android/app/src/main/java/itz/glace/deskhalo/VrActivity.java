@@ -22,17 +22,25 @@ public class VrActivity extends Activity {
     private native void nativeKeyboardBounds(float width,float depth,boolean resetPose);
     private final KeyboardFrame keyboardFrame=new KeyboardFrame();
     private volatile long measureStarted=0;
+    private boolean frameLatched=false;
+    private long frameReleased=0;
     private volatile float keyboardWidth=0,keyboardDepth=0;
     public float[] onKeyboardFrame(float[] points){
         long now=android.os.SystemClock.elapsedRealtime();
-        if(now-measureStarted>20000){nativeMeasureKeyboard(false);runOnUiThread(()->status="Measurement timed out. Try again with both hands visible.");return null;}
+        if(KeyboardFrame.measure(points)==null){
+            if(frameReleased==0)frameReleased=now;
+            if(now-frameReleased>700)frameLatched=false;
+            keyboardFrame.reset();return null;
+        }
+        frameReleased=0;
+        if(frameLatched)return null;
         float[] result=keyboardFrame.update(points,now);
-        if(result!=null){keyboardWidth=result[7];keyboardDepth=result[8];runOnUiThread(()->{status=String.format(Locale.US,"Keyboard fitted: %.1f × %.1f cm",keyboardWidth*100,keyboardDepth*100);saveProfile("last");});}
+        if(result!=null){frameLatched=true;keyboardWidth=result[7];keyboardDepth=result[8];runOnUiThread(()->{status=String.format(Locale.US,"Keyboard fitted: %.1f × %.1f cm",keyboardWidth*100,keyboardDepth*100);saveProfile("last");});}
         else status=points==null?"Keep both hands visible":String.format(Locale.US,"Frame keyboard with thumbs + index fingers · hold %d%%",(int)(keyboardFrame.progress*100));
         return result;
     }
     private void measureKeyboard(){
-        nativeMeasureKeyboard(false);keyboardFrame.reset();measureStarted=android.os.SystemClock.elapsedRealtime();keyboardVisible=true;
+        nativeMeasureKeyboard(false);keyboardFrame.reset();frameLatched=false;measureStarted=android.os.SystemClock.elapsedRealtime();keyboardVisible=true;
         status="Make two L shapes: thumbs inward, index fingers forward. Hold 1.2 seconds.";
         nativeMeasureKeyboard(true);
     }
