@@ -20,6 +20,28 @@ DeskHalo connects a Windows host to a native OpenXR Quest app over USB or local 
 - Saved workspace profiles, file transfer, PC audio to Quest and Quest microphone playback on the PC.
 - Optional independent Windows extended desktops through the separately installed Virtual Display Driver.
 
+## Feature visuals
+
+These AI-generated 3D illustrations explain the features; they are not captured app screenshots. All screen content is fictional. No room imagery or personal desktop content is included.
+
+### Place the keyboard with your hands
+
+![Amber hands framing a floating keyboard to illustrate placement and size calibration](docs/images/keyboard-framing.png)
+
+Hold the two-hand framing gesture steady for 1.2 seconds to fit the visible keyboard. Release the gesture before aligning it again.
+
+### Cursor and controller feedback
+
+![A visible arrow cursor beside a translucent amber controller with highlighted inputs](docs/images/cursor-controller-feedback.png)
+
+A separate cursor overlay and live controller-button feedback keep input visible, including through the translucent controller shell.
+
+### Shape your virtual workspace
+
+![Three virtual screens with fictional abstract content above a floating keyboard](docs/images/virtual-workspace.png)
+
+Arrange up to three panels and adjust screen size, distance, resolution and target FPS. Independent extended desktops require the separately installed virtual-display driver.
+
 ## Install and connect
 
 1. Download the **Windows x64 MSI** and **Quest APK** from Releases. The MSI installs for your Windows user and adds a Start menu shortcut. This preview MSI is unsigned; the APK uses a development signing certificate.
