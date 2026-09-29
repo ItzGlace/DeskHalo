@@ -1,0 +1,26 @@
+plugins { alias(libs.plugins.android.application) }
+android {
+    namespace 'itz.glace.deskhalo'
+    compileSdk { version = release(37) }
+    defaultConfig {
+        applicationId 'itz.glace.deskhalo'
+        minSdk 29
+        targetSdk 34
+        versionCode 6
+        versionName '0.6.0'
+        ndk { abiFilters 'arm64-v8a' }
+        externalNativeBuild { cmake { cppFlags '-std=c++17' } }
+    }
+    ndkVersion '28.2.13676358'
+    compileOptions { sourceCompatibility JavaVersion.VERSION_11; targetCompatibility JavaVersion.VERSION_11 }
+    externalNativeBuild { cmake { path file('src/main/cpp/CMakeLists.txt'); version '3.22.1' } }
+    buildFeatures { prefab true; buildConfig true }
+}
+dependencies { implementation 'org.khronos.openxr:openxr_loader_for_android:1.1.49' }
+
+
+// SourceSet accepts a concrete directory, not a Provider. Native build dependencies
+// below ensure CMake writes the bundled notices before assets are merged.
+android.sourceSets.main.assets.srcDir(layout.buildDirectory.dir('generated/model-assets').get().asFile)
+tasks.matching { it.name == 'mergeDebugAssets' }.configureEach { dependsOn 'externalNativeBuildDebug' }
+tasks.matching { it.name == 'mergeReleaseAssets' }.configureEach { dependsOn 'externalNativeBuildRelease' }

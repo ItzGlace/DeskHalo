@@ -1,0 +1,26 @@
+{
+  "license": "MIT",
+  "revision": "f4992299601614adbfefd398dc8e281556bb7444",
+  "assets": [
+    {
+      "file": "generic-hand-left.glb",
+      "sha256": "bc67783144944ea1cda54d9247885825ea5fb9d4651469fe7d00be517a5c2b87",
+      "source": "https://raw.githubusercontent.com/immersive-web/webxr-input-profiles/f4992299601614adbfefd398dc8e281556bb7444/packages/assets/profiles/generic-hand/left.glb"
+    },
+    {
+      "file": "generic-hand-right.glb",
+      "sha256": "291790c14f7f88a7f9bd35330c47392ed8e8d395ae6728f4bb7089f1bc1f2b96",
+      "source": "https://raw.githubusercontent.com/immersive-web/webxr-input-profiles/f4992299601614adbfefd398dc8e281556bb7444/packages/assets/profiles/generic-hand/right.glb"
+    },
+    {
+      "file": "oculus-touch-v2-left.glb",
+      "sha256": "1385bc8df4258cf67fbcab5665e502c0faa5b2d2374d5747125224ab850f6a7f",
+      "source": "https://raw.githubusercontent.com/immersive-web/webxr-input-profiles/f4992299601614adbfefd398dc8e281556bb7444/packages/assets/profiles/oculus-touch-v2/left.glb"
+    },
+    {
+      "file": "oculus-touch-v2-right.glb",
+      "sha256": "73c3945e6b001db5503747514c9cc31d0804fefca2e0d9dcff37adb409e55a61",
+      "source": "https://raw.githubusercontent.com/immersive-web/webxr-input-profiles/f4992299601614adbfefd398dc8e281556bb7444/packages/assets/profiles/oculus-touch-v2/right.glb"
+    }
+  ]
+}

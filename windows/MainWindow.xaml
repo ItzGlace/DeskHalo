@@ -1,0 +1,36 @@
+<Window x:Class="DeskHalo_Host.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Grid Background="#14161B" RequestedTheme="Dark" Padding="36">
+  <Grid.Resources><Style TargetType="TextBlock"><Setter Property="FontFamily" Value="ms-appx:///Assets/Fonts/IBMPlexSans-ExtraLight.ttf#IBM Plex Sans"/><Setter Property="FontWeight" Value="ExtraLight"/></Style></Grid.Resources>
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Spacing="8"><Image Source="Assets/deskhalo-logo.png" Width="52" Height="52" HorizontalAlignment="Left"/><TextBlock Text="DESKHALO" Foreground="#FFBD45" FontSize="16" FontWeight="Bold"/><TextBlock Text="Your desk. More space." FontSize="38" FontWeight="ExtraLight"/><TextBlock Text="A private workspace, shaped around you." Foreground="#989BA4" FontSize="16"/></StackPanel>
+  <ScrollViewer Grid.Row="1" Margin="0,24,0,18" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+  <Grid ColumnSpacing="24" MinWidth="780">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="3*"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
+   <Border Background="#1F2126" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="20" Padding="28">
+    <StackPanel Spacing="18"><TextBlock Text="CONNECT YOUR QUEST" Foreground="#FFBD45" FontSize="13" FontWeight="Bold"/>
+     <TextBlock Text="One workspace. Three ways in." FontSize="24" FontWeight="ExtraLight"/>
+     <TextBlock Text="Use USB, your PC hotspot, or the same Wi-Fi network." TextWrapping="Wrap" Foreground="#ACAFB8"/>
+     <TextBlock x:Name="AddressText" Text="Finding local addresses…" TextWrapping="Wrap" FontFamily="Consolas" FontSize="16"/>
+     <Border Background="#29251D" CornerRadius="12" Padding="18"><StackPanel><TextBlock Text="PAIRING CODE" Foreground="#C7AA70" FontSize="12"/><TextBlock x:Name="CodeText" FontSize="38" FontFamily="Consolas" Foreground="#FFD17A"/></StackPanel></Border>
+     <Button x:Name="ShareButton" Content="Start sharing" Click="ToggleSharing" Background="#FFBD45" Foreground="#17130A" Padding="26,14" HorizontalAlignment="Stretch"/>
+     <Button Content="Test USB + network connections" Click="TestConnections"/>
+     <TextBlock x:Name="ConnectionText" FontSize="12" TextWrapping="Wrap" Foreground="#ACAFB8"/>
+     <TextBlock x:Name="StatusText" Text="Ready • Sharing is off" Foreground="#ACAFB8" TextWrapping="Wrap"/>
+    </StackPanel>
+   </Border>
+   <StackPanel Grid.Column="1" Spacing="18">
+    <Border Background="#1F2126" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="20" Padding="24"><StackPanel Spacing="12"><TextBlock Text="DISPLAYS" Foreground="#FFBD45" FontSize="13" FontWeight="Bold"/><TextBlock x:Name="DisplaysText" TextWrapping="Wrap"/><TextBlock Text="Create extra Windows desktops" FontSize="16"/>
+     <StackPanel Orientation="Horizontal" Spacing="12"><Button Content="−" Click="RemoveDisplay"/><TextBlock x:Name="DisplayCountText" Text="0" VerticalAlignment="Center" FontSize="20"/><Button Content="+" Click="AddDisplay"/></StackPanel>
+     <Button Content="Set up extra displays ↗" Click="InstallDriver"/>
+     <TextBlock x:Name="DriverText" Text="Checking virtual display driver…" Foreground="#ACAFB8" TextWrapping="Wrap"/>
+    </StackPanel></Border>
+    <Border Background="#1F2126" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="20" Padding="24"><StackPanel Spacing="12"><TextBlock Text="KEYBOARD LIVE" Foreground="#FFBD45" FontSize="13" FontWeight="Bold"/><TextBlock x:Name="KeyText" Text="Press a key while sharing" FontSize="18" TextWrapping="Wrap"/><TextBlock Text="Key states are sent only while sharing. Nothing is recorded." Foreground="#989BA4" TextWrapping="Wrap"/></StackPanel></Border>
+    <Button Content="Send a file to Quest…" Click="ChooseTransfer"/>
+    <Button Content="Open file transfer folders ↗" Click="OpenTransfers"/>
+    <TextBlock Text="Adjust FPS, resolution, keyboard layout and screen width from inside your Quest." Foreground="#989BA4" TextWrapping="Wrap"/>
+   </StackPanel>
+  </Grid>
+  </ScrollViewer>
+  <TextBlock Grid.Row="2" Text="LOCAL CONNECTION  /  H.264 0.6.0  /  USB + WI-FI" Foreground="#767B85" FontSize="12"/>
+ </Grid>
+</Window>
